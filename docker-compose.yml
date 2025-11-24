@@ -11,3 +11,19 @@ services:
     build: ./colector
     container_name: colector
     restart: always
+    depends_on:
+     - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"      # Porta AMQP
+      - "15672:15672"    # Interface web de administração
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+volumes:
+  rabbitmq_data:

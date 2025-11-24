@@ -1,15 +1,15 @@
 import geocoder
-from dataColector import colect_data
+from sender import sender
 from datetime import datetime
 from croniter import croniter
 import time
 
-expressao_cron = "0 * * * *"  # roda todo minuto
+expressao_cron = "* * * * *"  # roda todo minuto
 
 def executar_tarefa():
     g = geocoder.ip('me')
     print("Localização:", g.latlng)
-    colect_data(g.lat, g.lng)
+    sender(g.lat, g.lng)
 
 if __name__ == "__main__":
     print("🔥 O cron está rodando dentro do container!")
