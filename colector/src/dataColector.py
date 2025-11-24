@@ -45,11 +45,15 @@ def colect_data(lat, lng):
         "timezone": TIMEZONE
     }
 
-  response = requests.get(url, params=params)
-  data = response.json()
+  try:
+    
+    response = requests.get(url, params=params)
+    data = response.json()
+  except:
+    print('Algo deu errado')
+    
   tz = pytz.timezone(TIMEZONE)
   agora = datetime.now(tz).strftime("%Y-%m-%dT%H:00")
-
   times = data["hourly"]["time"]
 
   try:
