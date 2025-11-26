@@ -31,15 +31,48 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneByEmail(email: string) {
+    try {
+      const userByEmail = await this.userModel.find({ email: email }).exec();
+      if (!userByEmail) {
+        return new Error('User not found!');
+      }
+      return userByEmail;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findOne(id: string) {
+    try {
+      const userById = await this.userModel.findById(id).exec();
+      if (!userById) {
+        throw new Error('User not found!');
+      }
+      return userById as User;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      const user = await this.findOne(id);
+      Object.assign(user, updateUserDto);
+      const updatedUser = new this.userModel(user);
+      return await updatedUser.save();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
+  async remove(id: string) {
+    try {
+      const user = await this.findOne(id);
+      const deletedUser = await this.userModel.deleteOne(user);
+      return deletedUser;
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 }
