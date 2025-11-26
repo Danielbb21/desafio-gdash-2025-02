@@ -1,11 +1,27 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
+	"io"
 	"log"
+	"net/http"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
+
+type WeatherInfo struct {
+	Lat      float64 `json:"lat"`
+	Lng      float64 `json:"lng"`
+	Dia      string  `json:"dia"`
+	Hora     string  `json:"hora"`
+	Vento    float64 `json:"vento"`
+	Temp     float64 `json:"temp"`
+	Umid     int     `json:"umid"`
+	Condicao string  `json:"condicao"`
+	Prob     int     `json:"prob"`
+}
 
 func failOnError(err error, msg string) {
 	if err != nil {
@@ -31,8 +47,32 @@ func connectRabbitMQ(url string) *amqp.Connection {
 	return nil
 }
 
+func sendWeather(msg string) error {
+	var data WeatherInfo
+	err := json.Unmarshal([]byte(msg), &data)
+	if err != nil {
+		log.Println("Erro ao decodificar JSON:", err)
+		return err
+	}
+	log.Printf("Mensagem decodificada: %+v\n", data)
+	jsonBytes, _ := json.Marshal(data)
+	resp, err := http.Post("http://backend:3000/weather", "application/json", bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		log.Println("Erro ao enviar:", err)
+		return err
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	log.Println("Backend respondeu:", string(body))
+	return nil
+}
+
 func processMessage(body []byte) error {
 	log.Printf("📩 Processando mensagem: %s", body)
+	err := sendWeather(string(body))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -71,6 +71,8 @@ def colect_data(lat, lng):
   hora = agora[1]
   dia = agora[0]
   object_data = {
+    "lat": lat,
+    "lng":lng,
     "dia": dia,
     "hora": hora,
     "vento": vento,
