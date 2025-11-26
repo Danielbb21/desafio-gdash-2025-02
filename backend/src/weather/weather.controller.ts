@@ -33,6 +33,18 @@ export class WeatherController {
     return res.send(csv);
   }
 
+  @Get('export/xlsx')
+  async export(@Res() res: Response) {
+    const buffer = await this.weatherService.exportXLSX();
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader('Content-Disposition', 'attachment; filename="weather.xlsx"');
+
+    res.send(buffer);
+  }
   @Get()
   findAll() {
     return this.weatherService.findAll();

@@ -4,6 +4,7 @@ import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Weather } from './entities/weather.entity';
 import { Model } from 'mongoose';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class WeatherService {
@@ -36,6 +37,27 @@ export class WeatherService {
     ];
 
     return csvRows.join('\n');
+  }
+
+  async exportXLSX(): Promise<Buffer> {
+    const data = await this.weatherModel.find().lean();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const cleanedData = data.map(({ _id, __v, ...rest }) => rest);
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Weather');
+
+    const keys = Object.keys(cleanedData[0] ?? {});
+    sheet.columns = keys.map((key) => ({
+      header: key,
+      key,
+      width: 20,
+    }));
+
+    cleanedData.forEach((row) => sheet.addRow(row));
+
+    const retrunData = await workbook.xlsx.writeBuffer();
+
+    return Buffer.from(retrunData);
   }
 
   findAll() {
