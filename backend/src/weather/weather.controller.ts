@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { WeatherService } from './weather.service';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { UpdateWeatherDto } from './dto/update-weather.dto';
@@ -19,6 +21,16 @@ export class WeatherController {
   create(@Body() createWeatherDto: CreateWeatherDto) {
     console.log('body', createWeatherDto);
     return this.weatherService.create(createWeatherDto);
+  }
+
+  @Get('export/csv')
+  async exportCSV(@Res() res: Response) {
+    const csv = await this.weatherService.exportCSV();
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=weather.csv');
+
+    return res.send(csv);
   }
 
   @Get()
