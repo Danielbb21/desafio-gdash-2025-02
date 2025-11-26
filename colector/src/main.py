@@ -21,8 +21,10 @@ if __name__ == "__main__":
         agora = datetime.now()
 
         espera = (proximo - agora).total_seconds()
-        if espera > 0:
-            time.sleep(espera)
 
-        print("⏰ Executando tarefa do cron:", datetime.now())
+        if espera <= 0:
+            executar_tarefa()
+            continue
+
+        time.sleep(espera)
         executar_tarefa()
