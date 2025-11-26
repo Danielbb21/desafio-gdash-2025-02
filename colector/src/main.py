@@ -4,7 +4,7 @@ from datetime import datetime
 from croniter import croniter
 import time
 
-expressao_cron = "* * * * *"  # roda todo minuto
+expressao_cron = "0 * * * *"  # roda toda hora no minuto zero
 
 def executar_tarefa():
     g = geocoder.ip('me')

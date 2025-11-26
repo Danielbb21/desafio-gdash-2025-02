@@ -1,11 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { UpdateWeatherDto } from './dto/update-weather.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Weather } from './entities/weather.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class WeatherService {
-  create(createWeatherDto: CreateWeatherDto) {
-    return 'This action adds a new weather';
+  constructor(@InjectModel(Weather.name) private weatherMode: Model<Weather>) {}
+
+  async create(createWeatherDto: CreateWeatherDto) {
+    try {
+      const createdWeather = new this.weatherMode(createWeatherDto);
+      return await createdWeather.save();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
   findAll() {
