@@ -47,6 +47,12 @@ export class WeatherController {
 
     res.send(buffer);
   }
+
+  @Get('temperature')
+  async getTemperature() {
+    return this.weatherService.listTemperatureDuringTheDay();
+  }
+
   @Get()
   findAll() {
     return this.weatherService.findAll();

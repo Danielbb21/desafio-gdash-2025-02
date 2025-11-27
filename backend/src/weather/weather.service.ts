@@ -10,8 +10,11 @@ import * as ExcelJS from 'exceljs';
 export class WeatherService {
   constructor(
     @InjectModel(Weather.name) private weatherModel: Model<Weather>,
-  ) {}
+  ) { }
 
+  private getDiaAtual(): string {
+    return new Date().toISOString().split('T')[0];
+  }
   async create(createWeatherDto: CreateWeatherDto) {
     try {
       const createdWeather = new this.weatherModel(createWeatherDto);
@@ -62,6 +65,20 @@ export class WeatherService {
 
   findAll() {
     return `This action returns all weather`;
+  }
+
+  async listTemperatureDuringTheDay() {
+    try {
+      const diaHoje = this.getDiaAtual();
+      return await this.weatherModel
+        .find({ dia: diaHoje })
+        .select('hora temp -_id')
+        .sort({ hora: 1 })
+        .lean()
+        .exec();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
   findOne(id: number) {
