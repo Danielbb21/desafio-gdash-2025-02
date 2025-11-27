@@ -80,6 +80,19 @@ export class WeatherService {
       throw new BadRequestException(err);
     }
   }
+  async listRainProbabilityDuringTheDay() {
+    try {
+      const diaHoje = this.getDiaAtual();
+      return await this.weatherModel
+        .find({ dia: diaHoje })
+        .select('hora prob -_id')
+        .sort({ hora: 1 })
+        .lean()
+        .exec();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
 
   findOne(id: number) {
     return `This action returns a #${id} weather`;

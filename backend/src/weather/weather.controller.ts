@@ -53,6 +53,11 @@ export class WeatherController {
     return this.weatherService.listTemperatureDuringTheDay();
   }
 
+  @Get('rain')
+  async getRain() {
+    return this.weatherService.listRainProbabilityDuringTheDay();
+  }
+
   @Get()
   findAll() {
     return this.weatherService.findAll();
