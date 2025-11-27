@@ -12,12 +12,14 @@ import type { Response } from 'express';
 import { WeatherService } from './weather.service';
 import { CreateWeatherDto } from './dto/create-weather.dto';
 import { UpdateWeatherDto } from './dto/update-weather.dto';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('weather')
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
 
   @Post()
+  @Public()
   create(@Body() createWeatherDto: CreateWeatherDto) {
     console.log('body', createWeatherDto);
     return this.weatherService.create(createWeatherDto);
