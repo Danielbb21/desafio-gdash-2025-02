@@ -13,8 +13,13 @@ export class WeatherService {
   ) { }
 
   private getDiaAtual(): string {
-    return new Date().toISOString().split('T')[0];
+    return new Date()
+      .toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+      .split('/')
+      .reverse()
+      .join('-');
   }
+
   async create(createWeatherDto: CreateWeatherDto) {
     try {
       const createdWeather = new this.weatherModel(createWeatherDto);
