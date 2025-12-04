@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -48,11 +48,13 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      const userById = await this.userModel.findById(id).exec();
+      const userById = await this.userModel.findById(id).lean();
       if (!userById) {
         throw new Error('User not found!');
       }
-      return userById as User;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userWithoutPass } = userById;
+      return userWithoutPass;
     } catch (err) {
       throw new BadRequestException(err);
     }
@@ -60,10 +62,19 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      const user = await this.findOne(id);
-      Object.assign(user, updateUserDto);
-      const updatedUser = new this.userModel(user);
-      return await updatedUser.save();
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(id, updateUserDto, {
+          new: true,
+          runValidators: true,
+        })
+        .lean();
+
+      if (!updatedUser) {
+        throw new Error('User not found!');
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userWithoutPass } = updatedUser;
+      return userWithoutPass;
     } catch (err) {
       throw new BadRequestException(err);
     }

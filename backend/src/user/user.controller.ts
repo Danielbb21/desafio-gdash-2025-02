@@ -11,6 +11,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from '../auth/decorators/public.decorator';
+import { User } from './decorators/user.decorator';
+import type { Payload } from '../helpers/payload';
 
 @Controller('user')
 export class UserController {
@@ -22,24 +24,24 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
+  @Get('/all')
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  @Get()
+  findOne(@User() user: Payload) {
+    return this.userService.findOne(user.sub);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Put('')
+  update(@User() user: Payload, @Body() updateUserDto: UpdateUserDto) {
     console.log('updateDTo', updateUserDto);
-    return this.userService.update(id, updateUserDto);
+    return this.userService.update(user.sub, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  @Delete()
+  remove(@User() user: Payload) {
+    return this.userService.remove(user.sub);
   }
 }
