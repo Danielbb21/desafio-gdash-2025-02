@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useLogin } from "../hooks/user/useLogin";
 import Loading from "../components/loading/Loading";
+import { useAuthContext } from "../providers/authProvider";
 
 const formSchema = z.object({
   email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
@@ -25,7 +26,10 @@ export const Login = () => {
     }
   });
 
-  const {mutate, isPending} = useLogin();
+  const {login} = useAuthContext();
+  const {mutate, isPending} = useLogin((token) => {
+    login(token);
+  });
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {

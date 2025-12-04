@@ -5,6 +5,9 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { AuthRoutes } from "./components/authRoutes";
+import { ProtectedRoutes } from "./components/protectedRoutes";
+import { Home } from "./pages/home";
 
 function App() {
   const queryClient = new QueryClient({
@@ -20,8 +23,13 @@ function App() {
       <QueryClientProvider client={queryClient}>
 
         <Routes>
-          <Route element={<Login />} path="/" />
-          <Route element={<Register />} path="registrer" />
+          <Route element={<AuthRoutes />}>
+            <Route element={<Login />} path="/" />
+            <Route element={<Register />} path="registrer" />
+          </Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route element={<Home/>} path="/home"/>
+          </Route>
         </Routes>
       </QueryClientProvider>
     </>
