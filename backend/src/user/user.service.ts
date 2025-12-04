@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -62,6 +62,14 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
+      if (updateUserDto.password) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        const hashedPassword = (await bcrypt.hash(
+          updateUserDto.password,
+          10,
+        )) as string;
+        updateUserDto.password = hashedPassword;
+      }
       const updatedUser = await this.userModel
         .findByIdAndUpdate(id, updateUserDto, {
           new: true,

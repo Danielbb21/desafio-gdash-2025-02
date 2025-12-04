@@ -24,6 +24,7 @@ export const NavBar = () => {
 
   const links: ILinks[] = [];
   links.push({ name: "Home", path: "/home" });
+  links.push({ name: "Profile", path: "/profile" });
 
   const { logout } = useAuthContext();
   return (

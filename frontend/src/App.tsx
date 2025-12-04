@@ -8,6 +8,7 @@ import {
 import { AuthRoutes } from "./components/authRoutes";
 import { ProtectedRoutes } from "./components/protectedRoutes";
 import { Home } from "./pages/home";
+import { Profile } from "./pages/profile";
 
 function App() {
   const queryClient = new QueryClient({
@@ -29,6 +30,7 @@ function App() {
           </Route>
           <Route element={<ProtectedRoutes />}>
             <Route element={<Home/>} path="/home"/>
+            <Route element={<Profile/>} path="/profile"/>
           </Route>
         </Routes>
       </QueryClientProvider>

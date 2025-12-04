@@ -21,7 +21,7 @@ const formSchema = z.object({
     error: "A confirmação de senha é obrigatória"
   }).max(50)
 }).refine((obj) => obj.password === obj.confirmPassword,
-  { error: 'As senhas não são iguais', path: ['confirmPassword'] });;
+  { error: 'As senhas não são iguais', path: ['confirmPassword'] });
 
 export const Register = () => {
   const form = useForm<z.infer<typeof formSchema>>({
