@@ -4,6 +4,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../components/ui/input"
 import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useLogin } from "../hooks/useLogin";
+import Loading from "../components/loading/Loading";
 
 const formSchema = z.object({
   email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
@@ -23,9 +25,13 @@ export const Login = () => {
     }
   });
 
+  const {mutate, isPending} = useLogin();
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('values', values);
+    const {email, password} = values;
+    mutate({email, password});
   }
   return (
     <>
@@ -69,8 +75,12 @@ export const Login = () => {
               <p className="text-center">Não tem uma conta <a href="registrer" className="text-secundary cursor-pointer">Cadastre-se</a></p>
               <Button type='submit'
                 variant={'secondary'}
-                // disabled={isPending}
-                className=' hover:cursor-pointer w-[100%] text-white'>Login</Button>
+                disabled={isPending}
+                className=' hover:cursor-pointer w-[100%]'>{!isPending ? 'Entrar' :
+                  <div className='w-[50%]'>
+                    <Loading />
+                  </div>
+                }</Button>
             </form>
           </Form>
 
