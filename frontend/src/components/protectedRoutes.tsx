@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuthContext } from "../providers/authProvider";
-// import { NavBar } from "./navbar/Navbar";
+import { NavBar } from "./navbar/Navbar";
 
 export const ProtectedRoutes = () => {
   const { user } = useAuthContext();
@@ -10,7 +10,7 @@ export const ProtectedRoutes = () => {
 
   return (
     <div className="w-full min-h-screen bg-cover bg-gradient-to-r from-secundary to-primary/90">
-      {/* <NavBar /> */}
+      <NavBar />
       <Outlet />
     </div>
   )
