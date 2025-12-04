@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../components/ui/input"
 import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from "../hooks/user/useLogin";
 import Loading from "../components/loading/Loading";
 
 const formSchema = z.object({
@@ -72,11 +72,11 @@ export const Login = () => {
                   </FormItem>
                 )}
               />
-              <p className="text-center">Não tem uma conta <a href="registrer" className="text-secundary cursor-pointer">Cadastre-se</a></p>
+              <p className="text-center">Não tem uma conta <a href="registrer" className="text-tertiary cursor-pointer">Cadastre-se</a></p>
               <Button type='submit'
                 variant={'secondary'}
                 disabled={isPending}
-                className=' hover:cursor-pointer w-[100%]'>{!isPending ? 'Entrar' :
+                className=' hover:cursor-pointer w-[100%] text-white'>{!isPending ? 'Entrar' :
                   <div className='w-[50%]'>
                     <Loading />
                   </div>

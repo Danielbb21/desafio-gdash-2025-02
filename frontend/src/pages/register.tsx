@@ -4,9 +4,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../components/ui/input"
 import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useCreateUser } from "../hooks/user/useCreateUser";
+import Loading from "../components/loading/Loading";
 
 const formSchema = z.object({
-  email: z.email({error: 'Insira um E-mail válido'}).min(2, {
+  email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
     error: "O usuário é obrigatório"
   }).max(50),
   password: z.string().min(2, {
@@ -32,9 +34,11 @@ export const Register = () => {
     }
   });
 
+  const { mutate, isPending } = useCreateUser();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('values', values);
+    mutate(values);
   }
   return (
     <>
@@ -106,8 +110,12 @@ export const Register = () => {
               />
               <Button type='submit'
                 variant={'secondary'}
-                // disabled={isPending}
-                className=' hover:cursor-pointer w-[100%] text-white'>Cadastrar</Button>
+                disabled={isPending}
+                className=' hover:cursor-pointer w-[100%] text-white'>{!isPending ? 'Cadastrar' :
+                  <div className='w-[50%]'>
+                    <Loading />
+                  </div>
+                }</Button>
             </form>
           </Form>
 

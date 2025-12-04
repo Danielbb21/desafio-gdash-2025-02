@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 // import { useNavigate } from "react-router"
-import { baseAxios } from "../helpers/axiosInterceptors";
+import { baseAxios } from "../../helpers/axiosInterceptors";
 import { toast } from "react-toastify";
 
 
