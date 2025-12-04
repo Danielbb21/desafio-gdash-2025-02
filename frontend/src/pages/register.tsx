@@ -6,20 +6,29 @@ import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 
 const formSchema = z.object({
-  email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
+  email: z.email({error: 'Insira um E-mail válido'}).min(2, {
     error: "O usuário é obrigatório"
   }).max(50),
   password: z.string().min(2, {
     error: "A senha é obrigatória"
+  }).max(50),
+  name: z.string().min(2, {
+    error: "O nome é obrigatória"
+  }).max(50),
+  confirmPassword: z.string().min(2, {
+    error: "A confirmação de senha é obrigatória"
   }).max(50)
-});
+}).refine((obj) => obj.password === obj.confirmPassword,
+  { error: 'As senhas não são iguais', path: ['confirmPassword'] });;
 
-export const Login = () => {
+export const Register = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     }
   });
 
@@ -30,13 +39,27 @@ export const Login = () => {
   return (
     <>
       <main className="h-screen bg-secundary flex items-center justify-center">
-        <div className="bg-quaternary h-[50%] w-[80%] rounded-b-sm md:h-[60%] md:w-[40%] rounded-md  flex flex-col justify-center items-center">
+        <div className="bg-quaternary h-[60%] w-[80%] rounded-b-sm md:h-[70%] md:w-[40%] rounded-md  flex flex-col justify-center items-center">
           <div className='w-[40%]'>
             {/* <img src={trocoLogo} alt="logo" /> */}
           </div>
-          <h1 className="text-xl mb-3">Login</h1>
+          <h1 className="text-xl mb-3">Cadastro</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-[60%] space-y-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Senha' {...field} className={
+                        form.formState.errors?.email ? "border-red-500 ring-red-500" : ""} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
@@ -44,7 +67,7 @@ export const Login = () => {
                   <FormItem>
                     <FormLabel>E-mail</FormLabel>
                     <FormControl>
-                      <Input placeholder='Usuário' {...field} className={
+                      <Input placeholder='E-mail' {...field} className={
                         form.formState.errors?.email ? "border-red-500 ring-red-500" : ""} />
                     </FormControl>
                     <FormMessage />
@@ -66,11 +89,25 @@ export const Login = () => {
                   </FormItem>
                 )}
               />
-              <p className="text-center">Não tem uma conta <a href="registrer" className="text-secundary cursor-pointer">Cadastre-se</a></p>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirmar Senha</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder='Senha' {...field} className={
+                        form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
+                      } />
+                    </FormControl>
+                    <FormMessage className='mb-0' />
+                  </FormItem>
+                )}
+              />
               <Button type='submit'
                 variant={'secondary'}
                 // disabled={isPending}
-                className=' hover:cursor-pointer w-[100%] text-white'>Login</Button>
+                className=' hover:cursor-pointer w-[100%] text-white'>Cadastrar</Button>
             </form>
           </Form>
 
