@@ -10,7 +10,7 @@ import * as ExcelJS from 'exceljs';
 export class WeatherService {
   constructor(
     @InjectModel(Weather.name) private weatherModel: Model<Weather>,
-  ) { }
+  ) {}
 
   private getDiaAtual(): string {
     return new Date()
@@ -72,6 +72,20 @@ export class WeatherService {
     return `This action returns all weather`;
   }
 
+  async listLatestWeatherOfTheDay() {
+    try {
+      const diaHoje = this.getDiaAtual();
+
+      return await this.weatherModel
+        .findOne({ dia: diaHoje })
+        .sort({ hora: -1 })
+        .lean()
+        .exec();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
   async listTemperatureDuringTheDay() {
     try {
       const diaHoje = this.getDiaAtual();
@@ -94,6 +108,36 @@ export class WeatherService {
         .sort({ hora: 1 })
         .lean()
         .exec();
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
+  }
+
+  async getWeatherDashboard() {
+    try {
+      const diaHoje = this.getDiaAtual();
+
+      const [latest, temps, rain] = await Promise.all([
+        this.weatherModel.findOne({ dia: diaHoje }).sort({ hora: -1 }).lean(),
+
+        this.weatherModel
+          .find({ dia: diaHoje })
+          .select('hora temp -_id')
+          .sort({ hora: 1 })
+          .lean(),
+
+        this.weatherModel
+          .find({ dia: diaHoje })
+          .select('hora prob -_id')
+          .sort({ hora: 1 })
+          .lean(),
+      ]);
+
+      return {
+        latest,
+        temperatures: temps,
+        rainProbability: rain,
+      };
     } catch (err) {
       throw new BadRequestException(err);
     }
