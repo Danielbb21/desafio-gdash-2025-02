@@ -1,3 +1,4 @@
+import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/skeleton";
 import { useDashboard } from "../hooks/weather/useDashboard"
 import {
@@ -12,6 +13,7 @@ import {
   YAxis,
   Legend
 } from "recharts";
+import { downloadCSV, downloadXLSX } from "../hooks/weather/useDownloadData";
 
 export const Home = () => {
   const { weatherData, isLoading, isPending } = useDashboard();
@@ -52,6 +54,10 @@ export const Home = () => {
   return (
     <main className="h-[90vh] flex items-center justify-center text-xl">
       <div className="bg-quaternary h-[95%] w-[95%] md:w-[90%] rounded-md flex flex-col overflow-auto items-center p-4">
+        <div className="w-[100%] flex justify-around">
+            <Button className="cursor-pointer" onClick={downloadCSV}>Baixar CSV</Button>
+            <Button className="cursor-pointer" onClick={downloadXLSX}>Baixar XLSX</Button>
+        </div>
         <h1>Clima de Hoje</h1>
 
         {/* CARDS */}
