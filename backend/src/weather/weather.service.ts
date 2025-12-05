@@ -5,13 +5,67 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Weather } from './entities/weather.entity';
 import { Model } from 'mongoose';
 import * as ExcelJS from 'exceljs';
+import { GoogleGenAI } from '@google/genai';
+import { AiRecommendation } from './interface/aiRecomendation.interface';
 
 @Injectable()
 export class WeatherService {
-  constructor(
-    @InjectModel(Weather.name) private weatherModel: Model<Weather>,
-  ) {}
+  private readonly ai: GoogleGenAI;
+  constructor(@InjectModel(Weather.name) private weatherModel: Model<Weather>) {
+    this.ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  }
 
+  async getAiActivityRecommendation(): Promise<AiRecommendation> {
+    const weatherData = await this.getWeatherDashboard();
+
+    const latest = weatherData.latest!;
+    const temps = weatherData.temperatures
+      .map((t) => `${t.hora}: ${t.temp}°C`)
+      .join(', ');
+    const rain = weatherData.rainProbability
+      .map((r) => `${r.hora}: ${r.prob}%`)
+      .join(', ');
+
+    const prompt = `
+      Você é um assistente de clima que recomenda atividades.
+      Com base nos dados de clima a seguir, gere uma análise e uma lista de 5 a 7 atividades ideais.
+      
+      Clima atual:
+      - Temperatura: ${latest.temp}°C
+      - Condição: ${latest.condicao}
+      - Probabilidade de Chuva Imediata: ${latest.prob}%
+      
+      Histórico de Temperaturas do Dia (Hora: Temp): ${temps}
+      
+      Histórico de Probabilidade de Chuva do Dia (Hora: Prob): ${rain}
+      
+      A saída DEVE ser um objeto JSON que siga o esquema:
+      {
+        "summary": "Breve análise do clima e sugestão geral de atividades.",
+        "recommendations": [
+          { "activity": "Nome da atividade", "reason": "Motivo da sugestão com base no clima." }
+        ]
+      }
+    `;
+
+    try {
+      const response = await this.ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+        },
+      });
+
+      const jsonText = response?.text?.trim() || '';
+      return JSON.parse(jsonText) as AiRecommendation;
+    } catch (error) {
+      console.error('Erro ao chamar a API do Gemini:', error);
+      throw new BadRequestException(
+        'Não foi possível obter a recomendação da IA.',
+      );
+    }
+  }
   private getDiaAtual(): string {
     return new Date()
       .toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })

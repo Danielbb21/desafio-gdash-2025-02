@@ -9,6 +9,7 @@ import { AuthRoutes } from "./components/authRoutes";
 import { ProtectedRoutes } from "./components/protectedRoutes";
 import { Home } from "./pages/home";
 import { Profile } from "./pages/profile";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
   const queryClient = new QueryClient({
@@ -29,10 +30,12 @@ function App() {
             <Route element={<Register />} path="registrer" />
           </Route>
           <Route element={<ProtectedRoutes />}>
-            <Route element={<Home/>} path="/home"/>
-            <Route element={<Profile/>} path="/profile"/>
+            <Route element={<Home />} path="/home" />
+            <Route element={<Profile />} path="/profile" />
           </Route>
         </Routes>
+        <ReactQueryDevtools initialIsOpen={false} />
+
       </QueryClientProvider>
     </>
   )

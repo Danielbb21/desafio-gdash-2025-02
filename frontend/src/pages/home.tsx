@@ -14,9 +14,11 @@ import {
   Legend
 } from "recharts";
 import { downloadCSV, downloadXLSX } from "../hooks/weather/useDownloadData";
+import { useGetIAInfo } from "../hooks/weather/useGetIAInfo";
 
 export const Home = () => {
   const { weatherData, isLoading, isPending } = useDashboard();
+  const { iaData, isIALoading } = useGetIAInfo();
   console.log('weatherData', weatherData);
 
   if (isLoading || isPending) {
@@ -55,12 +57,12 @@ export const Home = () => {
     <main className="h-[90vh] flex items-center justify-center text-xl">
       <div className="bg-quaternary h-[95%] w-[95%] md:w-[90%] rounded-md flex flex-col overflow-auto items-center p-4">
         <div className="w-[100%] flex justify-around">
-            <Button className="cursor-pointer" onClick={downloadCSV}>Baixar CSV</Button>
-            <Button className="cursor-pointer" onClick={downloadXLSX}>Baixar XLSX</Button>
+          <Button className="cursor-pointer" onClick={downloadCSV}>Baixar CSV</Button>
+          <Button className="cursor-pointer" onClick={downloadXLSX}>Baixar XLSX</Button>
         </div>
         <h1>Clima de Hoje</h1>
 
-        {/* CARDS */}
+
         <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-3 my-4">
           {cards.map((c) => (
             <div
@@ -72,11 +74,53 @@ export const Home = () => {
             </div>
           ))}
         </div>
+        <div className="w-full my-4">
+          <section className="bg-white rounded-md p-4 shadow-lg flex flex-col">
+            <h2 className="text-2xl font-bold text-primary mb-3">
+              🤖 Atividades Recomendadas Por Inteligência Artificial
+            </h2>
 
-        {/* GRÁFICOS */}
+            {isIALoading ? (
+              <Skeleton className="h-40 w-full bg-primary/50" />
+            ) : (
+              <>
+                <p className="text-base text-gray-700 italic mb-4">
+                  {iaData?.summary || "Nenhuma análise de clima disponível."}
+                </p>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Atividade Sugerida
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Motivo (Baseado no Clima)
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {iaData?.recommendations?.map((item, index) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.activity}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {item.reason}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+
         <div className="w-full grid md:grid-cols-2 gap-4">
 
-          {/* TEMPERATURA */}
           <section className="bg-white rounded-md p-2 shadow">
             <legend className="text-lg font-semibold px-2">
               Temperatura por hora
@@ -99,7 +143,6 @@ export const Home = () => {
             </div>
           </section>
 
-          {/* PROBABILIDADE DE CHUVA */}
           <section className="bg-white rounded-md p-2 shadow">
             <legend className="text-lg font-semibold px-2">
               Probabilidade de Chuva por hora

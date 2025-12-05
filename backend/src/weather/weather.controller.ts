@@ -25,6 +25,11 @@ export class WeatherController {
     return this.weatherService.create(createWeatherDto);
   }
 
+  @Get('recommendation')
+  async getRecommendation() {
+    return this.weatherService.getAiActivityRecommendation();
+  }
+
   @Get('export/csv')
   async exportCSV(@Res() res: Response) {
     const csv = await this.weatherService.exportCSV();
