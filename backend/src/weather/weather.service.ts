@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateWeatherDto } from './dto/create-weather.dto';
-import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Weather } from './entities/weather.entity';
 import { Model } from 'mongoose';
@@ -92,7 +91,7 @@ export class WeatherService {
     );
 
     const csvRows = [
-      headers.join(','), // header
+      headers.join(','),
       ...data.map((item) =>
         headers.map((header) => JSON.stringify(item[header] ?? '')).join(','),
       ),
@@ -199,13 +198,5 @@ export class WeatherService {
 
   findOne(id: number) {
     return `This action returns a #${id} weather`;
-  }
-
-  update(id: number, updateWeatherDto: UpdateWeatherDto) {
-    return `This action updates a #${id} weather`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} weather`;
   }
 }

@@ -1,17 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import { WeatherService } from './weather.service';
 import { CreateWeatherDto } from './dto/create-weather.dto';
-import { UpdateWeatherDto } from './dto/update-weather.dto';
 import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('weather')
@@ -66,15 +56,5 @@ export class WeatherController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.weatherService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWeatherDto: UpdateWeatherDto) {
-    return this.weatherService.update(+id, updateWeatherDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.weatherService.remove(+id);
   }
 }
