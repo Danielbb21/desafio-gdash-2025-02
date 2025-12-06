@@ -9,6 +9,7 @@ import { AuthRoutes } from "./components/authRoutes";
 import { ProtectedRoutes } from "./components/protectedRoutes";
 import { Home } from "./pages/home";
 import { Profile } from "./pages/profile";
+import PokemonPage from "./pages/pokemon";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route element={<Home />} path="/home" />
             <Route element={<Profile />} path="/profile" />
+            <Route element={<PokemonPage />} path="/pokemon" />
           </Route>
         </Routes>
 

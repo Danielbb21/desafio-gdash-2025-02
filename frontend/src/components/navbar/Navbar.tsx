@@ -16,6 +16,7 @@ export const NavBar = () => {
   const links: ILinks[] = [];
   links.push({ name: "Home", path: "/home" });
   links.push({ name: "Profile", path: "/profile" });
+  links.push({ name: "Pokemon", path: "/pokemon" });
 
   const { logout } = useAuthContext();
   return (
