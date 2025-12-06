@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useCreateUser } from "../hooks/user/useCreateUser";
 import Loading from "../components/loading/Loading";
+import logo from '../../assets/Logos.png';
 
 const formSchema = z.object({
   email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
@@ -44,8 +45,8 @@ export const Register = () => {
     <>
       <main className="h-screen bg-secundary flex items-center justify-center">
         <div className="bg-quaternary h-[60%] w-[80%] rounded-b-sm md:h-[70%] md:w-[40%] rounded-md  flex flex-col justify-center items-center">
-          <div className='w-[40%]'>
-            {/* <img src={trocoLogo} alt="logo" /> */}
+          <div className='w-[25%]'>
+            <img src={logo} alt="logo" />
           </div>
           <h1 className="text-xl mb-3">Cadastro</h1>
           <Form {...form}>

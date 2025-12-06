@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useLogin } from "../hooks/user/useLogin";
 import Loading from "../components/loading/Loading";
 import { useAuthContext } from "../providers/authProvider";
+import logo from '../../assets/Logos.png';
 
 const formSchema = z.object({
   email: z.email({ error: 'Insira um E-mail válido' }).min(2, {
@@ -40,9 +41,9 @@ export const Login = () => {
   return (
     <>
       <main className="h-screen bg-secundary flex items-center justify-center">
-        <div className="bg-quaternary h-[50%] w-[80%] rounded-b-sm md:h-[60%] md:w-[40%] rounded-md  flex flex-col justify-center items-center">
-          <div className='w-[40%]'>
-            {/* <img src={trocoLogo} alt="logo" /> */}
+        <div className="bg-quaternary h-[50%] w-[80%] rounded-b-sm md:h-[60%] md:w-[60%] rounded-md  flex flex-col justify-center items-center">
+          <div className='w-[25%]'>
+            <img src={logo} alt="logo" />
           </div>
           <h1 className="text-xl mb-3">Login</h1>
           <Form {...form}>
