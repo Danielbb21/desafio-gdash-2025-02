@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import axios from 'axios';
 import {
+  OnePokemonCompleteDetail,
   PokeApiListResponse,
   PokeApiPokemonDetails,
 } from './interfaces/pokemon.interface';
@@ -61,5 +62,24 @@ export class PokemonService {
     } catch (err) {
       throw new BadRequestException(err);
     }
+  }
+  async getOne(id: number) {
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+
+    const details = await axios.get<OnePokemonCompleteDetail>(url);
+
+    return {
+      id: details.data.id,
+      name: details.data.name,
+      sprite: details.data.sprites.front_default,
+      height: details.data.height,
+      weight: details.data.weight,
+      types: details.data.types.map((t) => t.type.name),
+      abilities: details.data.abilities.map((a) => a.ability.name),
+      stats: details.data.stats.map((s) => ({
+        name: s.stat.name,
+        value: s.base_stat,
+      })),
+    };
   }
 }

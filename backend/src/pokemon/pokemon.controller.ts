@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 
 @Controller('pokemon')
@@ -11,5 +11,10 @@ export class PokemonController {
     @Query('name') name: string,
   ) {
     return this.pokemonService.list(Number(page), Number(limit), name);
+  }
+
+  @Get(':id')
+  async getOne(@Param('id') id: string) {
+    return this.pokemonService.getOne(Number(id));
   }
 }
