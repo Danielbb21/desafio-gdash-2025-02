@@ -46,13 +46,13 @@ insights baseados em IA.
 
     (Python Collector) → coleta clima
              ↓ envia JSON
-    [Message Broker: RabbitMQ/Redis]
+    [Message Broker: RabbitMQ]
              ↓
     (Go Worker) → processa & envia para API
              ↓
     (NestJS API) → persiste no MongoDB
              ↓
-    (Frontend React) → dashboard + insights
+    (Frontend React) → dashboard + insights de IA
 
 ## 🌦️ Coleta de Dados (Python)
 
