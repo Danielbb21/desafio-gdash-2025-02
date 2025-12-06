@@ -57,7 +57,7 @@ export const Register = () => {
                   <FormItem>
                     <FormLabel>Nome</FormLabel>
                     <FormControl>
-                      <Input placeholder='Senha' {...field} className={
+                      <Input placeholder='Nome' {...field} className={
                         form.formState.errors?.email ? "border-red-500 ring-red-500" : ""} />
                     </FormControl>
                     <FormMessage />
@@ -100,7 +100,7 @@ export const Register = () => {
                   <FormItem>
                     <FormLabel>Confirmar Senha</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder='Senha' {...field} className={
+                      <Input type="password" placeholder='Confirmar Senha' {...field} className={
                         form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
                       } />
                     </FormControl>

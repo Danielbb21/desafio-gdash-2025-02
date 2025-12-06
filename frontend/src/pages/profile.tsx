@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { useGetOne } from "../hooks/user/useGetOne";
 import { useUpdateUser } from "../hooks/user/useUpdateUser";
 import Loading from "../components/loading/Loading";
+import { DeleteAcountDialog } from "../components/deleteAcountDialog/deleteAcountDialog";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome obrigatório"),
@@ -24,7 +25,7 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 export const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { data } = useGetOne();
-  console.log(data?.name, data?.email);
+  const [shouldOpenModal, setShouldOpenModal] = useState(false);
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -53,128 +54,140 @@ export const Profile = () => {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-secundary p-4">
-      <Card className="w-full max-w-xl bg-quaternary">
-        <CardHeader>
-          <CardTitle className="text-2xl">Meu Perfil</CardTitle>
-        </CardHeader>
+    <>
+      <main className="min-h-screen flex items-center justify-center bg-secundary p-4">
+        <Card className="w-full max-w-xl bg-quaternary">
+          <CardHeader>
+            <CardTitle className="text-2xl">Meu Perfil</CardTitle>
+          </CardHeader>
+          {!isEditing && (
+            <div className="flex items-center justify-center">
+              <Button
+                className="bg-red-800 hover:bg-red-700 cursor-pointer"
+                onClick={() => setShouldOpenModal(true)}
+              >Cancelar conta</Button>
+            </div>
+          )}
 
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-              {/* Nome */}
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome</FormLabel>
 
-                    {!isEditing ? (
-                      <p className="text-lg">{field.value}</p>
-                    ) : (
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    )}
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-mail</FormLabel>
-
-                    {!isEditing ? (
-                      <p className="text-lg">{field.value}</p>
-                    ) : (
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    )}
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* BOTÕES */}
-              {!isEditing ? (
-                <>
-                  <Button onClick={() => setIsEditing(true)} variant="secondary"
-                    className="text-white cursor-pointer">
-                    Atualizar informações
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Senha</FormLabel>
+                      {!isEditing ? (
+                        <p className="text-lg">{field.value}</p>
+                      ) : (
                         <FormControl>
-                          <Input type="password" placeholder='Senha' {...field} className={
-                            form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
-                          } />
+                          <Input {...field} />
                         </FormControl>
-                        <FormMessage className='mb-0' />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Confirmar Senha</FormLabel>
+                      )}
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Email */}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>E-mail</FormLabel>
+
+                      {!isEditing ? (
+                        <p className="text-lg">{field.value}</p>
+                      ) : (
                         <FormControl>
-                          <Input type="password" placeholder='Senha' {...field} className={
-                            form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
-                          } />
+                          <Input {...field} />
                         </FormControl>
-                        <FormMessage className='mb-0' />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex gap-3">
-                    <Button type='submit'
-                      variant={'secondary'}
-                      disabled={isPending}
-                      className=' hover:cursor-pointer  text-white'>{!isPending ? 'Salvar' :
-                        <div className='w-[50%]'>
-                          <Loading />
-                        </div>
-                      }</Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        form.reset({
-                          name: data?.name,
-                          email: data?.email,
-                        });
-                        setIsEditing(false);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      Cancelar
+                      )}
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {!isEditing ? (
+                  <>
+                    <Button onClick={() => setIsEditing(true)} variant="secondary"
+                      className="text-white cursor-pointer">
+                      Atualizar informações
                     </Button>
-                  </div>
-                </>
-              )}
+                  </>
+                ) : (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Senha</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder='Senha' {...field} className={
+                              form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
+                            } />
+                          </FormControl>
+                          <FormMessage className='mb-0' />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirmar Senha</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder='Senha' {...field} className={
+                              form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
+                            } />
+                          </FormControl>
+                          <FormMessage className='mb-0' />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="flex gap-3">
+                      <Button type='submit'
+                        variant={'secondary'}
+                        disabled={isPending}
+                        className=' hover:cursor-pointer  text-white'>{!isPending ? 'Salvar' :
+                          <div className='w-[50%]'>
+                            <Loading />
+                          </div>
+                        }</Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          form.reset({
+                            name: data?.name,
+                            email: data?.email,
+                          });
+                          setIsEditing(false);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        Cancelar
+                      </Button>
+                    </div>
+                  </>
+                )}
 
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </main>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </main>
+      <DeleteAcountDialog
+        setShouldOpenModal={setShouldOpenModal}
+        shouldOpen={shouldOpenModal}
+      />
+    </>
   );
 };
