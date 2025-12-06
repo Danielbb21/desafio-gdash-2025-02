@@ -27,27 +27,40 @@ export const Login = () => {
     }
   });
 
-  const {login} = useAuthContext();
-  const {mutate, isPending} = useLogin((token) => {
+  const { login } = useAuthContext();
+  const { mutate, isPending } = useLogin((token) => {
     login(token);
   });
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('values', values);
-    const {email, password} = values;
-    mutate({email, password});
+    const { email, password } = values;
+    mutate({ email, password });
   }
   return (
     <>
-      <main className="h-screen bg-secundary flex items-center justify-center">
-        <div className="bg-quaternary h-[50%] w-[80%] rounded-b-sm md:h-[60%] md:w-[60%] rounded-md  flex flex-col justify-center items-center">
-          <div className='w-[25%]'>
+      <main className="min-h-screen bg-secundary flex items-center justify-center p-4">
+        <div
+          className="
+      bg-quaternary 
+      w-full max-w-md
+      rounded-md
+      p-6
+      flex flex-col items-center
+    "
+        >
+          <div className="w-24 mb-4">
             <img src={logo} alt="logo" />
           </div>
+
           <h1 className="text-xl mb-3">Login</h1>
+
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-[60%] space-y-2">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full max-w-sm space-y-3"
+            >
               <FormField
                 control={form.control}
                 name="email"
@@ -55,13 +68,21 @@ export const Login = () => {
                   <FormItem>
                     <FormLabel>E-mail</FormLabel>
                     <FormControl>
-                      <Input placeholder='Usuário' {...field} className={
-                        form.formState.errors?.email ? "border-red-500 ring-red-500" : ""} />
+                      <Input
+                        placeholder="Usuário"
+                        {...field}
+                        className={
+                          form.formState.errors?.email
+                            ? "border-red-500 ring-red-500"
+                            : ""
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"
@@ -69,28 +90,51 @@ export const Login = () => {
                   <FormItem>
                     <FormLabel>Senha</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder='Senha' {...field} className={
-                        form.formState.errors?.password ? "border-red-500 ring-red-500" : ""
-                      } />
+                      <Input
+                        type="password"
+                        placeholder="Senha"
+                        {...field}
+                        className={
+                          form.formState.errors?.password
+                            ? "border-red-500 ring-red-500"
+                            : ""
+                        }
+                      />
                     </FormControl>
-                    <FormMessage className='mb-0' />
+                    <FormMessage className="mb-0" />
                   </FormItem>
                 )}
               />
-              <p className="text-center">Não tem uma conta <a href="registrer" className="text-tertiary cursor-pointer">Cadastre-se</a></p>
-              <Button type='submit'
-                variant={'secondary'}
+
+              <p className="text-center">
+                Não tem uma conta?{" "}
+                <a
+                  href="registrer"
+                  className="text-tertiary cursor-pointer font-medium"
+                >
+                  Cadastre-se
+                </a>
+              </p>
+
+              <Button
+                type="submit"
+                variant={"secondary"}
                 disabled={isPending}
-                className=' hover:cursor-pointer w-[100%] text-white'>{!isPending ? 'Entrar' :
-                  <div className='w-[50%]'>
+                className="hover:cursor-pointer w-full text-white"
+              >
+                {!isPending ? (
+                  "Entrar"
+                ) : (
+                  <div className="w-[50%]">
                     <Loading />
                   </div>
-                }</Button>
+                )}
+              </Button>
             </form>
           </Form>
-
         </div>
       </main>
+
     </>
   )
 }

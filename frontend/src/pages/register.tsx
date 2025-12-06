@@ -43,14 +43,22 @@ export const Register = () => {
   }
   return (
     <>
-      <main className="h-screen bg-secundary flex items-center justify-center">
-        <div className="bg-quaternary h-[60%] w-[80%] rounded-b-sm md:h-[70%] md:w-[40%] rounded-md  flex flex-col justify-center items-center">
-          <div className='w-[25%]'>
+      <main className="min-h-screen bg-secundary flex items-center justify-center p-4">
+        <div className="
+    bg-quaternary 
+    w-full max-w-md 
+    rounded-md 
+    p-6 
+    flex flex-col items-center
+  ">
+          <div className="w-24 mb-4">
             <img src={logo} alt="logo" />
           </div>
+
           <h1 className="text-xl mb-3">Cadastro</h1>
+
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-[60%] space-y-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-sm space-y-3">
               <FormField
                 control={form.control}
                 name="name"

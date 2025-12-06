@@ -2,25 +2,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useAuthContext } from '../../providers/authProvider';
-import { jwtDecode } from 'jwt-decode';
+import logo from '../../../assets/Logos.png';
 
 interface ILinks {
   name: string;
   path: string;
 }
 
-interface IToken {
-  sub: string;
-  role: string;
-  username: string;
-}
-
-
 export const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuthContext();
-  const { username } = jwtDecode<IToken>(user || '');
 
   const links: ILinks[] = [];
   links.push({ name: "Home", path: "/home" });
@@ -32,14 +23,11 @@ export const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0">
-            {/* <Link to="/home">
-              <img src={trocoLogo} alt="Logo" className="h-12 w-auto" />
-            </Link> */}
+            <Link to="/home">
+              <img src={logo} alt="Logo" className="h-12 w-auto" />
+            </Link>
           </div>
 
-          <div className='flex items-center justify-center'>
-            <span>Usuário: {username}</span>
-          </div>
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-4">
             {links.map((link) => (

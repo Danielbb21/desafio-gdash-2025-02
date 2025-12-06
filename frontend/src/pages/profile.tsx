@@ -55,8 +55,20 @@ export const Profile = () => {
 
   return (
     <>
-      <main className="min-h-screen flex items-center justify-center bg-secundary p-4">
-        <Card className="w-full max-w-xl bg-quaternary">
+      <main className="
+          min-h-[calc(100vh-70px)]
+          bg-secundary p-4
+          flex justify-center
+          items-start pt-6
+          md:items-center md:pt-0
+        ">
+
+        <Card className="
+            w-full max-w-xl bg-quaternary
+            max-h-[85vh]
+            overflow-y-auto
+            rounded-md
+          ">
           <CardHeader>
             <CardTitle className="text-2xl">Meu Perfil</CardTitle>
           </CardHeader>
