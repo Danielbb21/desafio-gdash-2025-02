@@ -1,7 +1,7 @@
 # 🌤️ GDASH Climate Integration --- Prosel GDASH 2025/02
 
 # Nome: Daniel Barbosa Bastos
-
+# Link vídeo: https://youtu.be/EwM1Foi7uzg
 Projeto desenvolvido para o processo seletivo **GDASH 2025/02**,
 integrando múltiplas tecnologias em uma solução full-stack distribuída.\
 O sistema coleta dados climáticos reais, processa-os via fila,
